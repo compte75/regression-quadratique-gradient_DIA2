@@ -55,6 +55,8 @@ def gradient_descent_quadratic(x, y, learning_rate=10**(-3), epochs=1000):
     predictions = quadratic_regression(a, b, c, x_sorted)
     plot(problems=x_sorted, solutions=y, predictions=predictions)
     return a, b, c, rmse_values_per_epoch
+
+
 if __name__ == "__main__":
     x_mean, x_std = df["surface"].mean(), df["surface"].std()
     y_mean, y_std = df["prix"].mean(), df["prix"].std()

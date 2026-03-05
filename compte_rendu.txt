@@ -1,0 +1,43 @@
+Question 1 : Pourquoi la standardisation aide la descente de gradient ?
+
+La standardisation évite la domination des variables. Si la surface est en dizaines et le prix en centaines de milliers,
+le gradient sera beaucoup plus influencé par le prix que par la surface, ce qui rend la convergence instable et lente.
+
+Question 2 :
+
+Si on ne normalise pas, les variables avec de grandes échelles vont dominer les autres, et la descente de gradient va 
+ne pas converger / diverger.
+
+Question 3 :
+
+La relation semble quasi-linéaire. Un modèle linéaire pourrait déjà bien fonctionner, mais un modèle quadratique pourrait capturer une légère courbure dans les données
+et potentiellement réduire l'erreur.
+
+Question 4 :
+
+Les 3 paramètres du modèle sont a, b et c. Ce modèle est plus flexible qu'un modèle affine car il peut former une courbe.
+
+Question 5 : 
+
+La MSE pénalise les grandes erreurs car elle met au carré. La RMSE est plus lisible car elle est dans la même unité que les données et plus facile à interpréter.
+
+Question 6 :
+
+la dévirée de (ŷ - y)**2 c'est 2(ŷ - y)
+par rapport à a c'est x²
+Par rapport à b c'est x
+Par rapport à c c'est 0
+
+Question 7 :
+
+Le learning rate sert à contrôler la taille du pas lors de la mise à jour des paramètres a, b, c à chaque epoch.
+
+Question 8 :
+
+La RMSE augmente au lieu de diminuer car les valeurs changes trop brutalement.
+
+Question 9 :
+
+L'entraînement est trop lent, il faut beaucoup trop d'epochs pour converger.
+
+

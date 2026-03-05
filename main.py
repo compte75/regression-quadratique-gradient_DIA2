@@ -1,72 +1,60 @@
 import numpy as np
-import pandas
+import pandas as pd # Correction : 'pandas' est plus courant sous le nom 'pd'
 import matplotlib.pyplot as plt
-import random
 
-
-df = pandas.read_csv("prix_maisons.csv")
-print(df.head())
-print(df.dtypes)
-print(len(df))
-
-def plot_data(surface, prix):
-    plt.figure(figsize=(15, 6))
-    plt.scatter(surface, prix, color="red")
-    plt.xlabel("Surface (standardisée)")
-    plt.ylabel("Prix (standarisée)")
-    plt.title("Surface vs Prix")
-    plt.show()
-
-def quadratic_regression(a, b, c, x):
-    return a*x**2 + b*x + c
-
-
-def mse(y, y_pred):
-    return np.mean((y_pred - y)**2)
-
-def rmse(y, y_pred):
-    return np.sqrt(mse(y, y_pred))
+# ... (tes fonctions mse, rmse, quadratic_regression restent les mêmes)
 
 def backpropagation_quadratic(a, b, c, x, y, learning_rate):
     n = len(x)
+    y_pred = a * x**2 + b * x + c
+    error = y_pred - y
     
-    dL_da = 2/n * np.sum((a * x**2 + b * x + c - y) * x**2)
-    dL_db = 2/n * np.sum((a * x**2 + b * x + c - y) * x)
-    dL_dc = 2/n * np.sum(a * x**2 + b * x + c - y)
+    # Tes formules étaient déjà excellentes !
+    dL_da = 2/n * np.sum(error * x**2)
+    dL_db = 2/n * np.sum(error * x)
+    dL_dc = 2/n * np.sum(error)
     
     a -= learning_rate * dL_da
     b -= learning_rate * dL_db
     c -= learning_rate * dL_dc
     
-    predictions = quadratic_regression(a, b, c, x)
-    current_rmse = rmse(y, predictions)
-    
+    current_rmse = np.sqrt(np.mean(error**2))
     return a, b, c, current_rmse
 
-def gradient_descent_quadratic(x, y, learning_rate=10**(-4), epochs=100):
-    a, b, c = np.random.random(), np.random.random(), np.random.randn()
-    n = len(x)
-    rmse_values_per_epoch = []
-    for index_epoch in range(epochs):
+def gradient_descent_quadratic(x, y, learning_rate= 10**(-3) , epochs=500):
+    # Initialisation
+    a, b, c = np.random.random (), np.random.random (), np.random.random ()
+    rmse_history = []
+
+    for i in range(epochs):
         a, b, c, current_rmse = backpropagation_quadratic(a, b, c, x, y, learning_rate)
-        rmse_values_per_epoch.append(current_rmse)
+        rmse_history.append(current_rmse)
+
+    # Visualisation finale
+    plt.figure(figsize=(10, 5))
+    plt.scatter(x, y, color="red", label="Données")
     
-    predictions = quadratic_regression(a, b, c, x)
-
-    plt(problems=x, solutions=y, predictions=predictions)
+    # Tracer la courbe apprise
+    x_range = np.linspace(min(x), max(x), 100)
+    y_range = a * x_range**2 + b * x_range + c
+    plt.plot(x_range, y_range, color="blue", label="Modèle Quadratique")
     
-    return a, b, c, rmse_values_per_epoch
-
-
-
+    plt.legend()
+    plt.title(f"Résultat après {epochs} époques")
+    plt.show()
+    
+    return a, b, c, rmse_history
 
 if __name__ == "__main__":
-	house_prices_df = pandas.read_csv("prix_maisons.csv")
-	x_mean, x_std = house_prices_df["surface"].mean(), house_prices_df["surface"].std()
-	y_mean, y_std = house_prices_df["prix"].mean(), house_prices_df["prix"].std()
-	house_prices_df["surface"] = (house_prices_df["surface"] - x_mean )/ x_std
-	house_prices_df["prix"] = (house_prices_df["prix"] - y_mean )/ y_std
-	plot_data(house_prices_df["surface"], house_prices_df["prix"])
-
-
-# MANQUE DE TEMPS IL EST PAS FINI 
+    # Chargement
+    df = pd.read_csv("prix_maisons.csv")
+    
+    # Standardisation
+    x = (df["surface"] - df["surface"].mean()) / df["surface"].std()
+    y = (df["prix"] - df["prix"].mean()) / df["prix"].std()
+    
+    # LANCEMENT DE L'ENTRAÎNEMENT (ce qui manquait)
+    a_fin, b_fin, c_fin, history = gradient_descent_quadratic(x.values, y.values)
+    
+    print(f"Coefficients finaux : a={a_fin:.4f}, b={b_fin:.4f}, c={c_fin:.4f}")
+    print(f"RMSE finale : {history[-1]:.4f}")
